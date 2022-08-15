@@ -23,9 +23,3 @@ class AppStore {
 }
 
 export default AppStore;
-
-// []
-// Лоудер экран (группы загружаются)
-// get /groups
-// [1, 2, 3]
-// отображаем группы

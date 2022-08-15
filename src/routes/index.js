@@ -1,4 +1,5 @@
 import SignInPage from "../components/pages/SignIn";
+import SignUpPage from "../components/pages/SignUp/SignUp";
 import WelconePage from "../components/pages/Welcome";
 
 const routes = [
@@ -11,6 +12,11 @@ const routes = [
         path: '/signin',
         type: 'free',
         component: <SignInPage />
+    },
+    {
+        path: '/signup',
+        type: 'free',
+        component: <SignUpPage />
     },
     {
         path: '/',
