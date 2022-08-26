@@ -6,7 +6,7 @@ const routes = [
     {
         path: '/groups',
         type: 'loggedIn',
-        component: () => <div>hello</div>
+        component: () => <div>groups</div>
     },
     {
         path: '/signin',

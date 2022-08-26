@@ -1,32 +1,37 @@
 import { Grid, TextField, Button, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
 import store from "../../../store";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ControlledInput from "../../ui/ControlledInput";
+import * as yup from "yup";
+import { useHistory } from "react-router";
 
-const SignUpForm = observer(() => {
-    const [wasSubmit, setWasSubmit] = useState(false); 
+const Schema = yup.object({
+    firstname: yup.string().required('Введите имя пользователя').min(3, 'Слишком коротрое имя'),
+    lastname: yup.string().required('Введите фамилию пользователя').min(3, 'Слишком коротрая фамилия'),
+    email: yup.string().required('Введите email').email("Невалидный email"),
+    password: yup.string().required('Введите пароль').min(6, 'Слишком короткий пароль'),
+    confirmPassword: yup.string().required('Введите пароль').oneOf([yup.ref('password'), null], 'Пароли должны совпадать'),  
+});
+
+const SignUpForm = observer(() => { 
     const { authStore }= store;
+    const form = useForm({
+        resolver: yupResolver(Schema),
+    });
+    const router = useHistory()
 
-    const isFormValid = 
-        !authStore.isPasswordNotCorrect && !authStore.isConfirmPasswordNotCorrect 
-        && !authStore.isFirstNameNotValid && !authStore.isLastNameNotValid && !authStore.isEmailNotValid
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        setWasSubmit(true);
-        if (isFormValid) {
-            console.log('form calling');
-            await authStore.signUp()
-        }
+    const onSubmit = async (data) => {
+        console.log(data)
     }
 
-    const handleInputChange = (key, e) => {
-        const value = e.target.value;
-        authStore.updateFormValue(key, value);
+    const handleOnRedirect = () => {
+        router.push('/signin')
     }
 
     return (
-        <form sx={{ width: '100%' }} onSubmit={onSubmit}>
+        <form sx={{ width: '100%' }} onSubmit={form.handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <Typography variant='h5' sx={{ fontWeight: 'bold' }}>
@@ -34,59 +39,50 @@ const SignUpForm = observer(() => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <ControlledInput
                         label="Firstname"
                         fullWidth
-                        value={authStore.firstName}
-                        onChange={(e) => handleInputChange('firstName', e)}
-                        error={wasSubmit && !!authStore.isFirstNameNotValid}
-                        helperText={(wasSubmit && authStore.isFirstNameNotValid) || ''}
+                        form={form}
+                        name="firstname"
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <ControlledInput
                         label="Lastname"
                         fullWidth
-                        value={authStore.lastName}
-                        onChange={(e) => handleInputChange('lastName', e)}
-                        error={wasSubmit && !!authStore.isLastNameNotValid}
-                        helperText={(wasSubmit && authStore.isLastNameNotValid) || ''}
+                        form={form}
+                        name="lastname"
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField
+                    <ControlledInput
                         label="Email"
-                        fullWidth type="email"
-                        value={authStore.email}
-                        onChange={(e) => handleInputChange('email', e)}
-                        error={wasSubmit && !!authStore.isEmailNotValid}
-                        helperText={(wasSubmit && authStore.isEmailNotValid) || ''}
+                        type='email'
+                        fullWidth
+                        form={form}
+                        name="email"
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <ControlledInput
                         label="Password"
-                        type='password'
                         fullWidth
-                        error={wasSubmit && !!authStore.isPasswordNotCorrect}
-                        helperText={(wasSubmit && authStore.isPasswordNotCorrect) || ''}
-                        value={authStore.password}
-                        onChange={(e) => handleInputChange('password', e)}
+                        form={form}
+                        type="password"
+                        name="password"
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TextField
+                    <ControlledInput
                         label="Confirm password"
-                        type='password'
                         fullWidth
-                        value={authStore.passwordConfirm}
-                        onChange={(e) => handleInputChange('passwordConfirm', e)}
-                        error={wasSubmit && !!authStore.isConfirmPasswordNotCorrect}
-                        helperText={(wasSubmit && authStore.isConfirmPasswordNotCorrect) || ''}
+                        form={form}
+                        type="password"
+                        name="confirmPassword"
                     />
                  </Grid>
                 <Grid item xs={6}>
-                    <Button fullWidth type='button'>
+                    <Button fullWidth type='button' onClick={handleOnRedirect}>
                         SignIn
                     </Button>
                 </Grid>

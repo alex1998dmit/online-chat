@@ -5,7 +5,6 @@ import { observer } from "mobx-react-lite"
 const LoggedInRoute = observer((props) => {
     const { children, ...rest } = props
     const { appStore } = store;
-    console.log(appStore.isLoggedIn, children);
     if (appStore.isLoggedIn) {
         return (<Route {...rest} strict>
             {children}
