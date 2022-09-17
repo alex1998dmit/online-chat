@@ -8,6 +8,8 @@ class AuthStore {
         this.email = '';
         this.password = '';
         this.passwordConfirm = '';
+        // TODO поправить в будущем
+        this.userId = 1;
         makeAutoObservable(this, { rootStore: false })
     }
 

@@ -1,3 +1,4 @@
+import ChatPage from "../components/pages/Chat";
 import SignInPage from "../components/pages/SignIn";
 import SignUpPage from "../components/pages/SignUp/SignUp";
 import WelconePage from "../components/pages/Welcome";
@@ -17,6 +18,11 @@ const routes = [
         path: '/signup',
         type: 'free',
         component: <SignUpPage />
+    },
+    {
+        path: '/chat/:id',
+        type: 'free',
+        component: <ChatPage />
     },
     {
         path: '/',
